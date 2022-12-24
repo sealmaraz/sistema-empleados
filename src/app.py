@@ -13,7 +13,7 @@ app.config['MYSQL_DATABASE_DB']='empleados'
 mysql.init_app(app)
 
 @app.route('/')
-def index();
+def index():
     conn = mysql.connect()
     cursor = conn.cursor()
 
