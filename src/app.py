@@ -38,8 +38,14 @@ def store():
 
     now =datetime.now()
     tiempo=now.strftime("%Y%H%M%S")
+
+    if _foto.filename != '':
+        nuevoNombreFoto= tiempo +'_'+ _foto.filename
+        _foto.save("uploads/" + nuevoNombreFoto)
+
+
     sql="INSERT INTO empleados (nombre, correo, foto) values (%s, %s, %s);"
-    datos = (_nombre, _correo, _foto.filename)
+    datos = (_nombre, _correo, nuevoNombreFoto)
 
     conn = mysql.connect()
     cursor = conn.cursor()
