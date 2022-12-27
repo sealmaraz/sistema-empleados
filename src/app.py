@@ -13,7 +13,29 @@ app.config['MYSQL_DATABASE_DB']='empleados'
 
 UPLOADS = os.path.join('src/uploads')
 app.config['UPLOADS'] = UPLOADS #guardamos la ruta con un valor en la apps
+
 mysql.init_app(app)
+
+conn=mysql.connect()
+cursor=conn.cursor()
+
+def queryMySql(query, data=(), tipoDeRetorno='none'):
+
+    if data != None:
+        cursor.execute(query, data)
+    else:
+        cursor.execute(query)
+
+    if tipoDeRetorno == "one":
+        registro=cursor.fetchone()
+        conn.commit()
+        return registro
+    elif tipoDeRetorno == "all":
+        registro=cursor.fetchall()
+        conn.commit()
+        return registro       
+    else:
+        conn.commit()
 
 @app.route('/fotodeusuario/<path:nombreFoto>')
 def uploads(nombreFoto):
@@ -26,10 +48,12 @@ cursor = conn.cursor()
 def index():
 
     sql="SELECT * FROM empleados;"
-    cursor.execute(sql)
+
+    empleados=queryMySql(sql,None,"all")
+    # cursor.execute(sql)
     
-    empleados = cursor.fetchall()
-    conn.commit()
+    # empleados = cursor.fetchall()
+    # conn.commit()
 
     return render_template('empleados/index.html',empleados=empleados)
 
@@ -54,8 +78,9 @@ def store():
     sql="INSERT INTO empleados (nombre, correo, foto) values (%s, %s, %s);"
     datos = (_nombre, _correo, nuevoNombreFoto)
 
-    cursor.execute(sql, datos)
-    conn.commit()
+    queryMySql(sql, datos)
+    # cursor.execute(sql, datos)
+    # conn.commit()
 
     return redirect('/')
 
@@ -63,21 +88,25 @@ def store():
 def delete(id):
 
     sql="SELECT foto FROM empleados WHERE id=(%s)"
-    datos=(id)
-    cursor.execute(sql, datos)
+    datos=[id]
 
-    nombreFoto= cursor.fetchone()[0]
+    nombreFoto=queryMySql(sql, datos, "one")
+    # cursor.execute(sql, datos)
+
+    # nombreFoto= cursor.fetchone()[0]
 
     try:
-        os.remove(os.path.join(app.config['UPLOADS'], nombreFoto))
+        os.remove(os.path.join(app.config['UPLOADS'], nombreFoto[0]))
     except:
         pass
 
     sql="DELETE FROM empleados WHERE id=(%s)"
-    datos=(id)
+    datos=[id]
 
-    cursor.execute(sql, datos)
-    conn.commit()
+    queryMySql(sql, datos)
+
+    # cursor.execute(sql, datos)
+    # conn.commit()
 
     return redirect('/')
 
