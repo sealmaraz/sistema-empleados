@@ -1,8 +1,8 @@
 
 {%include 'header.html' %}
 <h1>Hola flask</h1>
-    <table>
-        <thead>
+    <table class="table-responsive-md table-dark">
+        <thead class=" thead thead-dark">
             <tr>
                 <th>#</th>
                 <th>Nombre</th>
@@ -16,7 +16,8 @@
                 <td>{{empleado[0]}}</td>
                 <td>{{empleado[1]}}</td>
                 <td>{{empleado[2]}}</td>
-                <td>{{empleado[3]}}</td>
+                <td>
+                    <img width="80" src="fotodeusuario/{{empleado[3]}}" alt="foto de perfil"></td>
                 <td>
                     <a href="/modify/{{empleado[0]}}">Editar</a>
                     |
