@@ -1,5 +1,4 @@
-from flask import Flask
-from flask import render_template, request, redirect,send_from_directory
+from flask import render_template, request, redirect,send_from_directory, Flask, url_for
 from flaskext.mysql import MySQL
 from datetime import datetime
 import os
